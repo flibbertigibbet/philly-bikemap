@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Philly Bike Map</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+  <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.4"></script>
+  <script src='http://api.tiles.mapbox.com/mapbox.js/v1.5.2/mapbox.js'></script>
+  <link href='http://api.tiles.mapbox.com/mapbox.js/v1.5.2/mapbox.css' rel='stylesheet' />
+  <style>
+    body { margin:0; padding:0; }
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+    #map-ui {
+    position: absolute;
+    top: 75px;
+    left: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 100;
+}
+
+#map-ui a {
+    font: normal 13px/18px 'Helvetica Neue', Helvetica, sans-serif;
+    background: #FFF;
+    color: #3C4E5A;
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #BBB;
+    border-bottom-width: 0;
+    min-width: 138px;
+    padding: 10px;
+    text-decoration: none;
+}
+
+#map-ui a:hover {
+    background: #ECF5FA;
+}
+
+#map-ui li:last-child a {
+    border-bottom-width: 1px;
+    -webkit-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
+}
+
+#map-ui li:first-child a {
+    -webkit-border-radius: 3px 3px 0 0;
+    border-radius: 3px 3px 0 0;
+}
+
+#map-ui a.active {
+    background: #3887BE;
+    border-color: #3887BE;
+    border-top-color: #FFF;
+    color: #FFF;
+}
+  </style>
+</head>
+<body>
+<ul id='map-ui'></ul>
+<div id='map'></div>
+<script>
+var ui = document.getElementById('map-ui');
+var map = L.map('map', {
+  tileLayer: {
+        detectRetina: true
+    }
+}).setView([39.952451,-75.163664], 13);
+
+addLayer(L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', { attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.' }), null, 'Base Map', 1);
+
+addLayer(L.mapbox.tileLayer('banderkat.philly_bikeracks', {attribution:'Data from City of Philadelphia'}), 
+  L.mapbox.gridLayer('banderkat.philly_bikeracks'), 'Bike Racks', 2);
+addLayer(L.mapbox.tileLayer('banderkat.philly_bikeroutes', {attribution:'Data from City of Philadelphia'}), 
+  L.mapbox.gridLayer('banderkat.philly_bikeroutes'), 'Bike Routes', 3);
+
+function addLayer(layer, infoLayer, name, zIndex) {
+    var gridControl = null;
+    layer
+        .setZIndex(zIndex)
+        .addTo(map);
+        
+    if (infoLayer) {
+      infoLayer
+        .addTo(map);
+        gridControl = L.mapbox.gridControl(infoLayer, {follow: true}).addTo(map);
+    }
+
+    // Create a simple layer switcher that toggles layers on
+    // and off.
+    var item = document.createElement('li');
+    var link = document.createElement('a');
+
+    link.href = '#';
+    link.className = 'active';
+    link.innerHTML = name;
+
+    link.onclick = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (map.hasLayer(layer)) {
+            map.removeLayer(layer);
+            if (infoLayer) {
+              map.removeLayer(infoLayer);
+              gridControl.hide(); // hide any tooltip currently showing
+              map.removeControl(gridControl);
+            }
+            this.className = '';
+        } else {
+            map.addLayer(layer);
+            if (infoLayer) {
+              map.addLayer(infoLayer);
+              map.addControl(gridControl);
+            }
+            this.className = 'active';
+        }
+    };
+
+    item.appendChild(link);
+    ui.appendChild(item);
+}
+</script>
+
+</body>
+</html>
+
