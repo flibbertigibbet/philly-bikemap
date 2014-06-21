@@ -46,8 +46,8 @@ addLayer(L.mapbox.tileLayer('banderkat.PhillyBikeRacks', {attribution:'Data from
 addLayer(L.mapbox.tileLayer('banderkat.philly_bikeroutes', {attribution:'Data from City of Philadelphia'}), 
   L.mapbox.gridLayer('banderkat.philly_bikeroutes'), 'Bike Routes', 3);
   
-addLayer(L.mapbox.tileLayer('http://banderkat.com:8888/v2/bike-circuit/{z}/{x}/{y}.png', {attribution:'Data from DVRPA'}), 
-  L.mapbox.gridLayer('http://banderkat.com:8888/v2/bike-circuit.json'), 'Bike Trails Circuit', 4);
+addLayer(L.tileLayer('http://banderkat.com:8888/v2/bike-circuit/{z}/{x}/{y}.png', {attribution:'Data from DVRPA'}), 
+  L.mapbox.gridLayer('http://banderkat.com:8888/v2/bike-circuit.json'), 'The Circuit', 4);
 
 function addLayer(layer, infoLayer, name, zIndex) {
     var gridControl = null;
