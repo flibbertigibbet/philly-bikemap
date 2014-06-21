@@ -4,7 +4,7 @@
 <meta charset=utf-8 />
 <title>Philly Bike Map</title>
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.4"></script>
   <script src='http://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
   <link href='http://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css' rel='stylesheet' />
@@ -45,6 +45,9 @@ addLayer(L.mapbox.tileLayer('banderkat.PhillyBikeRacks', {attribution:'Data from
   L.mapbox.gridLayer('banderkat.PhillyBikeRacks'), 'Bike Racks', 2);
 addLayer(L.mapbox.tileLayer('banderkat.philly_bikeroutes', {attribution:'Data from City of Philadelphia'}), 
   L.mapbox.gridLayer('banderkat.philly_bikeroutes'), 'Bike Routes', 3);
+  
+addLayer(L.mapbox.tileLayer('http://banderkat.com:8888/v2/bike-circuit/{z}/{x}/{y}.png', {attribution:'Data from DVRPA'}), 
+  L.mapbox.gridLayer('http://banderkat.com:8888/v2/bike-circuit.json'), 'Bike Trails Circuit', 4);
 
 function addLayer(layer, infoLayer, name, zIndex) {
     var gridControl = null;
